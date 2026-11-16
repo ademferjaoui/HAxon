@@ -4,14 +4,6 @@
 
 A lightweight, Synapse-free Windows configuration utility for Razer wired and wireless mice. **HAxon** communicates directly with your mouse or HyperPolling dongle over native USB HID—giving you instant control over DPI, polling rate, and battery status without background services, accounts, or system bloat.
 
-## 📸 Screenshots
-
-| Wired Mouse View | Wireless Mouse & Battery Telemetry | 
-| :---: | :---: | 
-| ![Wired Mouse View](assets/screenshot-wired.png) | ![Wireless Mouse & Battery Telemetry](assets/screenshot-wireless.png) | 
-
-*(Note: Place your two screenshots in an `assets/` folder in your repository and update the filenames above to match.)*
-
 ## ⚙️ How It Works & Device Support
 
 * **Direct USB HID Communication:** Rather than relying on heavy background drivers, HAxon scans connected USB HID interfaces against `mice.json` to identify your Razer device and reads/writes hardware feature reports directly to the mouse's onboard memory.
