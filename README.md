@@ -24,7 +24,7 @@ A lightweight, Synapse-free Windows configuration utility for Razer wired and wi
 
 * **Live Battery Telemetry:** Read real-time battery percentage directly from wireless devices.
 
-* **100% Portable Architecture:** Leaves the Windows Registry completely untouched. Configuration files (`mouse.json` and `mice.json`) live right beside `HAxon.exe` for easy backups and updates.
+* **100% Portable Architecture:** Leaves the Windows Registry completely untouched. Configuration files (`mouse.json` and `mice.json`) live right beside `HAxon.exe` for easy backups and updates as our goal is to reduce the footprint of synapse app.
 
 ## 🚀 Getting Started
 
