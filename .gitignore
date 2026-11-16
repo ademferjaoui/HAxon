@@ -1,0 +1,11 @@
+@"
+__pycache__/
+*.pyc
+build/
+dist/
+release/
+*.spec
+*.log
+*.zip
+*.exe
+"@ | Set-Content -Path .gitignore -Encoding ascii

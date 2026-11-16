@@ -1,0 +1,4 @@
+@"
+hidapi
+Pillow
+"@ | Set-Content -Path requirements.txt -Encoding ascii
