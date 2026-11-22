@@ -8,4 +8,6 @@ release/
 *.log
 *.zip
 *.exe
+mouse.json
 "@ | Set-Content -Path .gitignore -Encoding ascii
+
