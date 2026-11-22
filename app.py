@@ -1,11 +1,13 @@
-import ctypes 
+import ctypes
 import tkinter as tk
 from tkinter import ttk
-from mouse import *
+from mouse import connect, saveLog, responseError, getResource, LOG_NAME
+from tray import tray_icon
 try:
     from PIL import Image, ImageTk, ImageEnhance
 except ImportError:
     Image=None
+
 AUTO_REFRESH_MS=30_000
 APP_NAME="Axon"
 FONT="Segoe UI"
@@ -54,6 +56,8 @@ class app(tk.Tk):
         self.hasBattery=True
         self.maxDpi=30000
         self.uiWidgets=[]
+        self.batLevel=None
+        self.batCharging=False
         self.dpiVar = tk.IntVar(value=800)
         self.dpiText = tk.StringVar(value="800")
         self.pollVar=tk.StringVar(value="1000")
@@ -65,6 +69,8 @@ class app(tk.Tk):
             self.canvas.create_image(0,0,image=self.bgImage,anchor='nw')
         self.buildFooter()
         self.protocol("WM_DELETE_WINDOW",self.quitApp)
+        self.tray=tray_icon(self,on_quit=self.quitApp)
+        self.bind("<Unmap>",self.onMinimize)
         self.rescan()
         self.after(AUTO_REFRESH_MS,self.autoRefresh)
     def applyDarkTheme(self):
@@ -144,7 +150,16 @@ class app(tk.Tk):
         c.create_window(PAD+half+8,btnY,window=quitBtn,anchor="nw",width=half,height=30,tags="footer")
     def setStatus(self,text,error=False):
         self.statusLabel.config(text=text,foreground=RED if error else GREEN)
+    def onMinimize(self,event):
+        if event.widget is self and self.state()=="iconic":
+            if self.razer == None : self.tray.start(self.batLevel,self.batCharging)
+            else : self.tray.start(self.batLevel,self.batCharging,self.razer.name)
+    def setBattery(self,pct,charging):
+        self.batLevel,self.batCharging=pct,charging
+        if self.razer == None : self.tray.update(pct,charging)
+        else : self.tray.update(pct,charging,(self.razer.name))
     def quitApp(self):
+        self.tray.stop()
         if self.razer:
             try:
                 self.razer.handle.close()
@@ -152,6 +167,7 @@ class app(tk.Tk):
                 pass
         self.destroy()
     def rescan(self):
+        self.setBattery(None,False)
         if self.razer:
             try:
                 self.razer.handle.close()
@@ -174,7 +190,9 @@ class app(tk.Tk):
         try :
             pct,charging=self.razer.battery()
         except (responseError, OSError) as e:
+            self.setBattery(None,False)
             return f'battery: {e}'
+        self.setBattery(pct,charging)
         self.bar['value']=pct
         self.bar.configure(style=self.batteryStyle(pct,charging))
         self.batteryLabel.config(text=f'{pct}%'+("  (charging)" if charging else ""))
@@ -207,8 +225,7 @@ class app(tk.Tk):
         if error:
             self.setStatus(error,True)
     def autoRefresh(self):
-        if self.state()=='normal':
-            self.refresh()
+        self.refresh()
         self.after(AUTO_REFRESH_MS,self.autoRefresh)
     def snapDPI(self,value):
         return max(100,min(self.maxDpi,int(float(value)/100+0.5)*100))
@@ -244,7 +261,6 @@ class app(tk.Tk):
             self.setStatus("Choose a polling rate first",True)
         except (responseError,OSError) as e:
             self.setStatus(f"set Polling Rate failed: {e}",True)
-
     def buildUi(self):
         self.clearUi()
         c=self.canvas
@@ -295,6 +311,5 @@ class app(tk.Tk):
             hint="Rates above 1000 Hz need the HyperPolling dongle"
         if hint:
             CanvasLabel(c,PAD,y+ROW_H+6,hint,(FONT,9),MUTED,full)
-
-if __name__ == "__main__":   
+if __name__ == "__main__":
     app().mainloop()
