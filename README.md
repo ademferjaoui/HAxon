@@ -23,6 +23,7 @@ A lightweight, Synapse-free Windows configuration utility for Razer wired and wi
 * **DPI & Sensitivity Management:** Configure your active DPI cleanly with a slider or exact numeric input without bloated driver suites.
 
 * **Live Battery Telemetry:** Read real-time battery percentage directly from wireless devices.
+* **Minimize to Tray:** app can be minimized and shows mouse name and battery status when available  
 
 * **100% Portable Architecture:** Leaves the Windows Registry completely untouched. Configuration files (`mouse.json` and `mice.json`) live right beside `HAxon.exe` for easy backups and updates as our goal is to reduce the footprint of synapse app.
 
